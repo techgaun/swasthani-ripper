@@ -1,0 +1,14 @@
+#!/bin/bash
+###############################################
+#	Swasthani.com Swasthani Ripper	      #
+#	Samar @ http://www.techgaun.com       #
+###############################################
+if [[ ! -f /tmp/swasthani.txt ]]
+then
+	wget http://www.swasthani.com/ -O - | egrep '<li class="leaf( first| last)?"><a href="/swasthani/' | grep -o '<a .*href=.*>' | sed -e 's/<a /\n<a /g' | sed -e 's/<a .*href=['"'"'"]//' -e 's/["'"'"'].*$//' -e '/^$/ d' > /tmp/swasthani.txt
+fi
+
+while read -r line
+do
+	wget "http://www.swasthani.com$line" -O - | egrep 'data="soundFile=http://www.swasthani.com/system/files/' | cut -d\" -f6 | cut -d= -f2 | wget -nc -i -
+done </tmp/swasthani.txt
